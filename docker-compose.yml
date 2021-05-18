@@ -1,0 +1,20 @@
+version: '3.9'
+services:
+  web:
+    image: nginx:alpine
+    ports:
+      - 8000:80
+    container_name: ${PROJECT_NAME}_nginx
+    volumes:
+      - ./code/${PROJECT_NAME}:/var/www/${PROJECT_NAME}:rw
+      - ./site.conf:/etc/nginx/conf.d/site.template:ro
+    environment:
+      - PROJECT_NAME=${PROJECT_NAME}
+    command: /bin/sh -c "envsubst '$$PROJECT_NAME' < /etc/nginx/conf.d/site.template > /etc/nginx/conf.d/default.conf && exec nginx -g 'daemon off;'"
+  php:
+    build: ./php
+    working_dir: /var/www/${PROJECT_NAME}
+    container_name: ${PROJECT_NAME}_php
+    volumes:
+      - ./code/${PROJECT_NAME}:/var/www/${PROJECT_NAME}:rw
+
