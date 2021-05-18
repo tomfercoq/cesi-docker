@@ -5,7 +5,6 @@ RUN apk update && apk --no-cache add \
     icu-dev \
     && docker-php-ext-install -j$(nproc) intl
 
-WORKDIR /var/www/html
 COPY ./php.ini /usr/local/etc/php/
 
 RUN usermod -u 1000 www-data
